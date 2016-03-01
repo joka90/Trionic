@@ -100,18 +100,18 @@
     <Compile Include="AppSettings.cs" />
     <Compile Include="CombiAdapterMonitor.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="frmLogFilters.cs">
+    <!--<Compile Include="frmLogFilters.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLogFilters.Designer.cs">
+    </Compile>-->
+    <!--<Compile Include="frmLogFilters.Designer.cs">
       <DependentUpon>frmLogFilters.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmTuningSettings.cs">
+    </Compile>-->
+    <!--<Compile Include="frmTuningSettings.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTuningSettings.Designer.cs">
+    </Compile>-->
+    <!--<Compile Include="frmTuningSettings.Designer.cs">
       <DependentUpon>frmTuningSettings.cs</DependentUpon>
-    </Compile>
+    </Compile>-->
     <Compile Include="FTDIAdapterMonitor.cs" />
     <Compile Include="FuelMap.cs" />
     <Compile Include="FuelMapInformation.cs" />
@@ -182,7 +182,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <EmbeddedResource Include="frmLogFilters.resx">
       <DependentUpon>frmLogFilters.cs</DependentUpon>
     </EmbeddedResource>
@@ -196,7 +196,7 @@
       <Project>{0253E98B-6374-48AA-8740-89BC2939FF77}</Project>
       <Name>PSTaskDialog</Name>
     </ProjectReference>
-  </ItemGroup>
+  </ItemGroup>-->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

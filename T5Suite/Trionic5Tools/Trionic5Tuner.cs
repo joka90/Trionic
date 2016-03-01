@@ -140,13 +140,8 @@ namespace Trionic5Tools
                 {
                     msg = "Partnumber not recognized, tuning will continue anyway, please verify settings afterwards";
                 }
-                PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
-                PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
-                PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
-                PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                string stageDescription = ConvertToStageDescription(stage);
-                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me up™ to stage " + stageDescription + " wizard", "This wizard will tune your binary to a stage " + stageDescription + " equivalent.", "Boost request map, fuel injection and ignition tables will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma © 2009", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me to stage " + stageDescription + "|No thanks!", PSTaskDialog.eTaskDialogButtons.None, PSTaskDialog.eSysIcons.Information, PSTaskDialog.eSysIcons.Warning);
-                switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
+          
+                switch (0)
                 {
                     case 0:
                         // tune to stage 1
@@ -162,104 +157,7 @@ namespace Trionic5Tools
                         {
                             TuneToStage(filename, stage, ecuinfo.Stage3boost, 0.72, 1.54, 0.62, ecuinfo.Stage3boost, 90, isLpt, t5p.TurboType, t5p.InjectorType, t5p.MapSensorType);
                         }
-                        else if (stage == 99) // stage X
-                        {
-                            // get parameters from user:
-                            // max boost, turbo type, injector type, rpm limit etc etc
-                            frmTuningSettings tunset = new frmTuningSettings();
-                            tunset.Turbo = t5p.TurboType;
-                            tunset.Injectors = t5p.InjectorType;
-                            tunset.MapSensor = t5p.MapSensorType;
-                            if (t5p.MapSensorType != MapSensorType.MapSensor25)
-                            {
-                                // set max boost etc
-                                //tunset.PeakBoost = 1.75;
-                                //tunset.BoostFuelcut = 2.05;
-                            }
-                            if (tunset.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                            {
-                                // write details to the file
 
-                                if (t5p.MapSensorType != tunset.MapSensor)
-                                {
-                                    ConvertFileToThreeBarMapSensor(m_fileInformation, t5p.MapSensorType, tunset.MapSensor);
-                                }
-                                // check injector type
-                                if (t5p.InjectorType != tunset.Injectors)
-                                {
-                                    int inj_konst_diff = DetermineDifferenceInInjectorConstant(t5p.InjectorType, tunset.Injectors);
-                                    AddToInjectorConstant(filename, inj_konst_diff);
-                                    // roughly set inj_konst
-                                    // Stock = 21
-                                    // Green giants = 20 (minus 1)
-                                    // Siemens 630 = 16 (minus 5)
-                                    // Siemens 875 = 13 (minus 8)
-                                    // Siemens 1000 = 10 (minus 11)
-
-                                    // set battery correction voltage maps
-
-                                    SetInjectorBatteryCorrectionMap(m_TrionicFile, tunset.Injectors);
-                                }
-                                t5p.TurboType = tunset.Turbo;
-                                t5p.InjectorType = tunset.Injectors;
-                                t5p.MapSensorType = tunset.MapSensor;
-                                // determine stage??
-                                if (tunset.PeakBoost < 1.2) stage = 1;
-                                else if (tunset.PeakBoost < 1.3) stage = 2;
-                                else if (tunset.PeakBoost < 1.4) stage = 3;
-                                else if (tunset.PeakBoost < 1.5) stage = 4;
-                                else if (tunset.PeakBoost < 1.6) stage = 5;
-                                else if (tunset.PeakBoost < 1.7) stage = 6;
-                                else if (tunset.PeakBoost < 1.8) stage = 7;
-                                else if (tunset.PeakBoost < 1.9) stage = 8;
-                                else stage = 9;
-                                if (tunset.MapSensor == MapSensorType.MapSensor30)
-                                {
-                                    // set correct values
-
-                                    double conversion = CalculateConversionFactor(MapSensorType.MapSensor25, tunset.MapSensor);
-                                    tunset.PeakBoost = (((((tunset.PeakBoost + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFirstGear = (((((tunset.BoostFirstGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostSecondGear = (((((tunset.BoostSecondGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFuelcut = (((((tunset.BoostFuelcut + 1) * 100) / conversion) / 100) - 1);
-                                }
-                                else if (tunset.MapSensor == MapSensorType.MapSensor35)
-                                {
-                                    // set correct values
-                                    double conversion = CalculateConversionFactor(MapSensorType.MapSensor25, tunset.MapSensor);
-                                    tunset.PeakBoost = (((((tunset.PeakBoost + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFirstGear = (((((tunset.BoostFirstGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostSecondGear = (((((tunset.BoostSecondGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFuelcut = (((((tunset.BoostFuelcut + 1) * 100) / conversion) / 100) - 1);
-                                }
-                                else if (tunset.MapSensor == MapSensorType.MapSensor40)
-                                {
-                                    // set correct values
-                                    double conversion = CalculateConversionFactor(MapSensorType.MapSensor25, tunset.MapSensor);
-                                    tunset.PeakBoost = (((((tunset.PeakBoost + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFirstGear = (((((tunset.BoostFirstGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostSecondGear = (((((tunset.BoostSecondGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFuelcut = (((((tunset.BoostFuelcut + 1) * 100) / conversion) / 100) - 1);
-                                }
-                                else if (tunset.MapSensor == MapSensorType.MapSensor50)
-                                {
-                                    // set correct values
-                                    double conversion = CalculateConversionFactor(MapSensorType.MapSensor25, tunset.MapSensor);
-                                    tunset.PeakBoost = (((((tunset.PeakBoost + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFirstGear = (((((tunset.BoostFirstGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostSecondGear = (((((tunset.BoostSecondGear + 1) * 100) / conversion) / 100) - 1);
-                                    tunset.BoostFuelcut = (((((tunset.BoostFuelcut + 1) * 100) / conversion) / 100) - 1);
-                                }
-                                m_TrionicFile.SetTrionicOptions(t5p);
-                                TuneToStage(filename, stage, tunset.PeakBoost, tunset.BoostFirstGear, tunset.BoostSecondGear, tunset.BoostFirstGear, tunset.BoostFuelcut, 90, /*isLpt*/ true, t5p.TurboType, t5p.InjectorType, t5p.MapSensorType);
-                            }
-                            else
-                            {
-                                retval = TuningResult.TuningCancelled;
-                                return retval;
-                            }
-
-                        }
                         retval = TuningResult.TuningSuccess;
                         break;
                     /*                        case 1:
